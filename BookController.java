@@ -1,7 +1,6 @@
-package Book;
+package com.example.demo.book;
 
-import Student.Student;
-import Student.StudentService;
+import com.example.demo.student.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,10 +27,9 @@ public class BookController {
     public Optional<Book> getBookByCode(@PathVariable Integer code) {return bookservice.getByCode(code);}
 
 
-    @RequestMapping(method=RequestMethod.POST, value="/books")
-    public void  save( @RequestBody Book book){
+    @RequestMapping(method=RequestMethod.POST, value="/books/create")
+    public void  createBook( @RequestBody Book book){
         bookservice.save(book);}
-
 
 }
 
