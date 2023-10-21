@@ -1,5 +1,6 @@
-package Book;
+package com.example.Ftp_.Book;
 
+import com.example.Ftp_.Book.Student.Student;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
