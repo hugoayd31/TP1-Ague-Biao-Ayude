@@ -1,5 +1,7 @@
 package com.example.demo.student;
 
+import com.example.demo.book.BookRepository;
+import com.example.demo.book.Book;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,12 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final BookRepository bookRepository ;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository,BookRepository bookRepository ) {
         this.studentRepository = studentRepository;
+        this.bookRepository = bookRepository;
     }
 
     public List<Student> getStudent() {
@@ -35,7 +39,7 @@ public class StudentService {
         Optional<Student> studentByEmail = studentRepository.findStudentByEmail(email);
 
         if (studentByEmail.isEmpty()) {
-            throw new IllegalStateException(" no student find ");
+            throw new IllegalStateException(" no student found ");
         }
         return studentByEmail.get();
     }
@@ -49,7 +53,7 @@ public class StudentService {
         Student s = studentRepository.findStudentByEmail(email).orElseThrow(()
                 -> new IllegalStateException(" student with email " + email + " does not exists"));
 
-        if (!firstName.isBlank() & !firstName.equals(s.getFirstName())) {
+        if (!firstName.isBlank() & !firstName.equals(s.getFirstName() )  ) {
             s.setFirstName(firstName);
         }
 
@@ -57,16 +61,37 @@ public class StudentService {
     }
 
     @Transactional
-    public void modifyStudentsAge(int age) {
-        List<Student> studentList = studentRepository.findAllByAgeGreaterThan(age);
+    public List<Student> modifyStudentsAge() {
+        List<Student> studentList = studentRepository.findAll();
         if (studentList.isEmpty()) {
-            throw new IllegalStateException("student with age greater than " + age + " do not exist");
+            throw new IllegalStateException("There is no student in your database");
         }
         for (Student s : studentList) {
             s.setAge(s.getAge() + 1);
         }
+        return studentList;
+    }
+
+    public List<Student> getStudentsOlderThan20() {
+        return studentRepository.findAllByAgeGreaterThan20();
 
     }
 
+    @Transactional
+    public void addNewBook(Integer code, String email) {
 
+        Optional <Book> b = bookRepository.findByCode(code);
+        if (b.isEmpty()){
+            throw new IllegalStateException(" there is no book with the code "+ code + "in book table");
+        }
+        System.out.println(b.get() instanceof Book);
+        Student s = this.getStudentByEmail(email);
+        List<Book> l = s.getBooks();
+        l.add(b.get());
+        System.out.println(l);
+        s.setBooks(l);
+        studentRepository.save(s);
+        System.out.println(s.getBooks());
+
+    }
 }
