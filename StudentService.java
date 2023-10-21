@@ -24,6 +24,12 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    public void addNewStudent(Student s){
+        if (studentRepository.findStudentByEmail(s.getEmail()).isPresent()){
+            throw new IllegalStateException(" another student with same email already exists");
+        }
+        studentRepository.save(s);
+    }
 
     public Student getStudentByEmail(String email) {
         Optional<Student> studentByEmail = studentRepository.findStudentByEmail(email);
@@ -45,7 +51,6 @@ public class StudentService {
 
         if (!firstName.isBlank() & !firstName.equals(s.getFirstName())) {
             s.setFirstName(firstName);
-            //studentRepository.save(s);
         }
 
 
@@ -53,7 +58,7 @@ public class StudentService {
 
     @Transactional
     public void modifyStudentsAge(int age) {
-        List<Student> studentList = studentRepository.findAllByAge(age);
+        List<Student> studentList = studentRepository.findAllByAgeGreaterThan(age);
         if (studentList.isEmpty()) {
             throw new IllegalStateException("student with age greater than " + age + " do not exist");
         }
