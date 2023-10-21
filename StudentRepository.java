@@ -15,7 +15,9 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
     @Query("select s from Student  s where s.age = ?1")
     List <Student> findAllByAge(Integer age);
 
-    @Query("select s from Student  s where s.age > ?1")
-    List <Student> findAllByAgeGreaterThan(Integer age);
+    @Query("select s from Student  s where s.age > 20")
+    List <Student> findAllByAgeGreaterThan20();
+
+
 
 }
