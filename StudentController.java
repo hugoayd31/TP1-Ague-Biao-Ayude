@@ -1,41 +1,45 @@
-package Student;
+package com.example.demo.student;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping(path="student")
+@RequestMapping(path= "/student")
 public class StudentController {
 
-    private final StudentService studentservice;
+    public final StudentService studentService;
 
-@Autowired
-    public StudentController(StudentService studentservice) {
-        this.studentservice = studentservice;
+    @Autowired
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     @GetMapping
-    public List<Student> getStudents() {
-        return studentservice.getStudents();
+    public List<Student> getStudent() {
+        return studentService.getStudent();
     }
 
-    @RequestMapping(method=RequestMethod.GET, value="/students/{email}")
-    public Optional<Student> getStudentByEmail(@PathVariable String email) {return studentservice.getByEmail(email);}
+    @RequestMapping(method = RequestMethod.GET, value = "/students/email/{email}")
+    public Student getStudentByEmail(@PathVariable String email) {
+        return studentService.getStudentByEmail(email);
+    }
 
-    @RequestMapping(method=RequestMethod.GET, value="/students/{age}")
+    @RequestMapping(method = RequestMethod.GET, value = "/students/age/{age}")
     public List<Student> getStudentsByAge(@PathVariable Integer age) {
-        return studentservice.getByAge(age);
+        return studentService.getStudentsByAge(age);
     }
 
-    @RequestMapping(method=RequestMethod.POST, value="/students")
-    public void  save( @RequestBody Student s){
-        studentservice.save(s);}
+    @RequestMapping(method = RequestMethod.PUT, value = "/students/modify/{email}")
+    public void modifyStudent(@PathVariable String email, @RequestParam String firstName) {
+        studentService.modifyStudent(email, firstName);
+    }
 
-    @RequestMapping(method=RequestMethod.PUT, value="/students/{email}{firstName}")
-    public void modifyStudent (@PathVariable String email, @PathVariable String firstName ){
-        studentservice.modifyStudent(email, firstName);
+    @RequestMapping(method = RequestMethod.PUT, value = "/students/modifyAge/{age}")
+    public void modifyStudentAgeGreaterThan(@PathVariable int age) {
+        studentService.modifyStudentsAge(age);
     }
 }
+   
