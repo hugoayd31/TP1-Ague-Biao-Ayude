@@ -18,4 +18,3 @@ import java.util.Optional;
         public Optional<Book> findByName(String name);
 
     }
-
