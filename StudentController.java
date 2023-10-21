@@ -32,6 +32,11 @@ public class StudentController {
         return studentService.getStudentsByAge(age);
     }
 
+    @PostMapping(path = "/students/create")
+    public void creatStudent(@RequestBody Student student){
+        studentService.addNewStudent(student);
+    }
+
     @RequestMapping(method = RequestMethod.PUT, value = "/students/modify/{email}")
     public void modifyStudent(@PathVariable String email, @RequestParam String firstName) {
         studentService.modifyStudent(email, firstName);
@@ -42,4 +47,3 @@ public class StudentController {
         studentService.modifyStudentsAge(age);
     }
 }
-   
