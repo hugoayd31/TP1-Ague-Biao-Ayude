@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,12 +17,13 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final BookRepository bookRepository ;
+    private final BookRepository bookRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository,BookRepository bookRepository ) {
+    public StudentService(StudentRepository studentRepository, BookRepository bookRepository) {
         this.studentRepository = studentRepository;
         this.bookRepository = bookRepository;
+
     }
 
     public List<Student> getStudent() {
@@ -77,17 +79,48 @@ public class StudentService {
 
     }
 
-    @Transactional
-    public void addNewBook(Integer code, String email) {
+    /*@Transactional
+    public void setBookList(String email , List<Book> list){
+        Student s = this.getStudentByEmail(email);
+        s.setBooks(list);
+    }*/
 
+    public void addNewBook( String email, Integer code) {
+        List<Book> l = new ArrayList<>();
         Optional <Book> b = bookRepository.findByCode(code);
         if (b.isEmpty()){
             throw new IllegalStateException(" there is no book with the code "+ code + "in book table");
         }
-        System.out.println(b.get() instanceof Book);
+
         Student s = this.getStudentByEmail(email);
-        List<Book> l = s.getBooks();
+        b.get().setStudent(s);
+        l = s.getBooks();
+        System.out.println(l);
+        System.out.println(b.get());
         l.add(b.get());
+        System.out.println(l);
+        s.setBooks(l);
+        studentRepository.save(s);
+        System.out.println(s.getBooks());
+
+    }
+
+    public void setBooks( String email, List<Integer> code) {
+        List<Book> l = new ArrayList<>();
+
+        Student s = this.getStudentByEmail(email);
+        for(Integer i : code ) {
+            Optional <Book> b = bookRepository.findByCode(i);
+            if (b.isEmpty()){
+                throw new IllegalStateException(" there is no book with the code "+ code + "in book table");
+            }
+            b.get().setStudent(s);
+            l.add(b.get());
+        }
+
+
+
+
         System.out.println(l);
         s.setBooks(l);
         studentRepository.save(s);
