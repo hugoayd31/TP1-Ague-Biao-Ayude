@@ -53,9 +53,15 @@ public class StudentController {
         return studentService.getStudentsOlderThan20();
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/students/add-book/{code}")
-    public void addBook (@PathVariable Integer code, @RequestParam String email){
-        studentService.addNewBook(code, email);
+    @RequestMapping(method = RequestMethod.PUT, value = "/students/{email}/book/{code}")
+    public void  addBook (@PathVariable String email, @PathVariable Integer code){
+        studentService.addNewBook(email, code);
     }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/students/{email}/books/{codes}")
+    public void  addBooks (@PathVariable String email, @PathVariable List<Integer> codes){
+        studentService.setBooks(email, codes);
+    }
+
 
 }
