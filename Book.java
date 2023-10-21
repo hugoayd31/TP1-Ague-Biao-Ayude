@@ -19,10 +19,10 @@ public class Book {
     private Integer code;
 
     @JsonBackReference
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "student_id")
     @EqualsAndHashCode.Exclude
-    @ToString.Include
+    @ToString.Exclude
     private Student student;
 
 
@@ -48,4 +48,4 @@ public class Book {
 
 
 
-
+}
